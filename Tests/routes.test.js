@@ -6,10 +6,11 @@ let makeEmail = () => {
     randomEmail = randomString + "@gmail.com"
     return { re: randomEmail, rs: randomString };
 }
+let random = Math.random().toString(36).substring(2, 15);
 describe('Users Endpoints', () => {
     it('should create a new user', async () => {
         const res = await request(app)
-            .post('/api/user/signup')
+            .post('/api/users/signup')
             .send({
                 email: makeEmail().re,
                 password: `123456`,
@@ -19,7 +20,7 @@ describe('Users Endpoints', () => {
     })
     it("shouldn't create a new user due to no email entered", async () => {
         const res = await request(app)
-            .post('/api/user/signup')
+            .post('/api/users/signup')
             .send({
                 password: `123456`,
             })
@@ -27,7 +28,7 @@ describe('Users Endpoints', () => {
     })
     it("shouldn't create a new user due to no password entered", async () => {
         const res = await request(app)
-            .post('/api/user/signup')
+            .post('/api/users/signup')
             .send({
                 email: "test@gmail.com"
             })
@@ -35,7 +36,7 @@ describe('Users Endpoints', () => {
     })
     it("shouldn't create a new user due to repeated email", async () => {
         const res = await request(app)
-            .post('/api/user/signup')
+            .post('/api/users/signup')
             .send({
                 email: `test@gmail.com`,
                 password: `123456`,
@@ -44,7 +45,7 @@ describe('Users Endpoints', () => {
     })
     it("shouldn't create a new user due to wrong email format", async () => {
         const res = await request(app)
-            .post('/api/user/signup')
+            .post('/api/users/signup')
             .send({
                 email: makeEmail().rs,
                 password: `123456`,
@@ -53,22 +54,22 @@ describe('Users Endpoints', () => {
     })
     it('should login', async () => {
         const result = await request(app)
-            .post('/api/user/signup')
+            .post('/api/users/signup')
             .send({
                 email: makeEmail().re,
                 password: `123456`,
             })
         const res = await request(app)
-            .post('/api/user/login')
+            .post('/api/users/login')
             .send({
-                email:result.body.email,
+                email: result.body.email,
                 password: `123456`,
             })
         expect(res.statusCode).toEqual(200)
     })
     it("shouldn't login due to no email entered", async () => {
         const res = await request(app)
-            .post('/api/user/login')
+            .post('/api/users/login')
             .send({
                 password: `123456`,
             })
@@ -76,7 +77,7 @@ describe('Users Endpoints', () => {
     })
     it("shouldn't login due to no password entered", async () => {
         const res = await request(app)
-            .post('/api/user/login')
+            .post('/api/users/login')
             .send({
                 email: `test@gmail.com`
             })
@@ -84,7 +85,7 @@ describe('Users Endpoints', () => {
     })
     it("shouldn't login due to wrong password", async () => {
         const res = await request(app)
-            .post('/api/user/login')
+            .post('/api/users/login')
             .send({
                 email: `test@gmail.com`,
                 password: `1234567`
@@ -93,7 +94,7 @@ describe('Users Endpoints', () => {
     })
     it("shouldn't login due to no email found with the email enterd", async () => {
         const res = await request(app)
-            .post('/api/user/login')
+            .post('/api/users/login')
             .send({
                 email: `test2@gmail.com`,
                 password: `123456`
@@ -104,7 +105,7 @@ describe('Users Endpoints', () => {
 describe('Movies GET Endpoint', () => {
     it('should get all movies', async () => {
         const res = await request(app)
-            .get('/api/movie/')
+            .get('/api/movies/')
             .send()
         expect(res.statusCode).toEqual(200)
     })
@@ -112,10 +113,10 @@ describe('Movies GET Endpoint', () => {
 describe('Movies POST Endpoint', () => {
     it('should create a new movie', async () => {
         const res = await request(app)
-            .post('/api/movie/')
+            .post('/api/movies/')
             .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ') // Works.
             .send({
-                name: `Lion King`,
+                name: random,
                 genre: `cartoon`,
                 year: `2000`
             })
@@ -124,7 +125,7 @@ describe('Movies POST Endpoint', () => {
     })
     it("shouldn't create a new movie due to no token found -Unathorized", async () => {
         const res = await request(app)
-            .post('/api/movie/')
+            .post('/api/movies/')
             .send({
                 name: `spiderman`,
                 genre: `cartoon`,
@@ -134,7 +135,7 @@ describe('Movies POST Endpoint', () => {
     })
     it("shouldn't create a new movie due to no name entered", async () => {
         const res = await request(app)
-            .post('/api/movie/')
+            .post('/api/movies/')
             .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ') // Works.
             .send({
                 genre: `cartoon`,
@@ -144,7 +145,7 @@ describe('Movies POST Endpoint', () => {
     })
     it("shouldn't create a new movie due to no genre entered", async () => {
         const res = await request(app)
-            .post('/api/movie/')
+            .post('/api/movies/')
             .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ') // Works.
             .send({
                 name: `spiderman`,
@@ -154,7 +155,7 @@ describe('Movies POST Endpoint', () => {
     })
     it("shouldn't create a new movie due to no year entered", async () => {
         const res = await request(app)
-            .post('/api/movie/')
+            .post('/api/movies/')
             .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ') // Works.
             .send({
                 name: `spiderman`,
@@ -166,53 +167,36 @@ describe('Movies POST Endpoint', () => {
 describe('Movies PATCH Endpoint', () => {
     it('should edit a movie', async () => {
         const res = await request(app)
-            .patch('/api/movie/5e9a8adae9473b4900895ee2')
+            .patch('/api/movies/5e9a8adae9473b4900895ee2')
             .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ')
             .send({ year: "2001" })
         expect(res.statusCode).toEqual(200)
     })
     it("shouldn't edit a movie due to wrong id", async () => {
         const res = await request(app)
-            .patch('/api/movie/5e9a8adae9473b4900895ee')
+            .patch('/api/movies/5e9a8adae9473b4900895ee')
             .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ')
             .send({ year: "2001" })
         expect(res.statusCode).toEqual(400)
     })
     it("shouldn't edit a movie due to no id sent in the url", async () => {
         const res = await request(app)
-            .patch('/api/movie/')
+            .patch('/api/movies/')
             .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ')
             .send({ year: "2001" })
         expect(res.statusCode).toEqual(404)
     })
     it("shouldn't edit a movie due to no token found", async () => {
         const res = await request(app)
-            .patch('/api/movie/5e9a8adae9473b4900895ee2')
+            .patch('/api/movies/5e9a8adae9473b4900895ee2')
             .send({ year: "2001" })
         expect(res.statusCode).toEqual(403)
-    })
-})
-describe('Movies Delete Endpoint', () => {
-    it('should create a movie, then delete it', async () => {
-        const res = await request(app)
-            .post('/api/movie/')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ') // Works.
-            .send({
-                name: `Lion King`,
-                genre: `cartoon`,
-                year: `2000`
-            })
-        const result = await request(app)
-            .delete(`/api/movie/${res.body._id}`)
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ') // Works.
-            .send()
-        expect(result.statusCode).toEqual(200)
     })
 })
 describe('Reviews GET Endpoint', () => {
     it('should get all reviews', async () => {
         const res = await request(app)
-            .get('/api/review/')
+            .get('/api/reviews/')
             .send()
         expect(res.statusCode).toEqual(200)
     })
@@ -220,7 +204,7 @@ describe('Reviews GET Endpoint', () => {
 describe('Reviews POST Endpoint', () => {
     it('should create a new review', async () => {
         const res = await request(app)
-            .post('/api/review/')
+            .post('/api/reviews/')
             .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ')
             .send({
                 movieId: `5e9a8adae9473b4900895ee2`,
@@ -231,7 +215,7 @@ describe('Reviews POST Endpoint', () => {
     })
     it("shouldn't create a new review due to no token found -Unathorized", async () => {
         const res = await request(app)
-            .post('/api/movie/')
+            .post('/api/movies/')
             .send({
                 movieId: `5e9a8adae9473b4900895ee2`,
                 rate: `7`
@@ -240,7 +224,7 @@ describe('Reviews POST Endpoint', () => {
     })
     it("shouldn't create a new review due to no movieId entered", async () => {
         const res = await request(app)
-            .post('/api/review/')
+            .post('/api/reviews/')
             .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ')
             .send({
 
@@ -250,7 +234,7 @@ describe('Reviews POST Endpoint', () => {
     })
     it("shouldn't create a new review due to no rate entered", async () => {
         const res = await request(app)
-            .post('/api/review/')
+            .post('/api/reviews/')
             .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ')
             .send({
                 movieId: `5e9a8adae9473b4900895ee2`
@@ -263,54 +247,30 @@ describe('Reviews POST Endpoint', () => {
 describe('Reviews PATCH Endpoint', () => {
     it('should edit a review', async () => {
         const res = await request(app)
-            .patch('/api/review/5e9a71fc1077df1040deb901')
+            .patch('/api/reviews/5e9a71fc1077df1040deb901')
             .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ')
             .send({ rate: "5" })
         expect(res.statusCode).toEqual(200)
     })
     it("shouldn't edit a review due to wrong id", async () => {
         const res = await request(app)
-            .patch('/api/review/5e9a71fc1077df1040deb90')
+            .patch('/api/reviews/5e9a71fc1077df1040deb90')
             .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ')
             .send({ rate: "5" })
         expect(res.statusCode).toEqual(400)
     })
     it("shouldn't edit a review due to wrong id", async () => {
         const res = await request(app)
-            .patch('/api/review/')
+            .patch('/api/reviews/')
             .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ')
             .send({ rate: "5" })
         expect(res.statusCode).toEqual(404)
     })
     it("shouldn't edit a review due to no token sent", async () => {
         const res = await request(app)
-            .patch('/api/review/')
+            .patch('/api/reviews/')
             .send({ rate: "5" })
         expect(res.statusCode).toEqual(403)
     })
 
-})
-describe('Reviews Delete Endpoint', () => {
-    it('should create a review, then delete it', async () => {
-        const _res = await request(app)
-            .post('/api/movie/')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ') // Works.
-            .send({
-                name: `Lion King`,
-                genre: `cartoon`,
-                year: `2000`
-            })
-        const res = await request(app)
-            .post('/api/review/')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ')
-            .send({
-                movieId: _res.body._id,
-                rate: `7`
-            })
-        const result = await request(app)
-            .delete(`/api/review/${res.body._id}`)
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ') // Works.
-            .send()
-        expect(result.statusCode).toEqual(200)
-    })
 })

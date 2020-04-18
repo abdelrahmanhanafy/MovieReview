@@ -15,9 +15,9 @@ const movieController = require('./Controllers/movie')(express);
 const reviewController = require('./Controllers/review')(express);
 
 //Routes
-app.use('/api/user', userController);
-app.use('/api/movie', movieController);
-app.use('/api/review', reviewController);
+app.use('/api/users', userController);
+app.use('/api/movies', movieController);
+app.use('/api/reviews', reviewController);
 
 
 //dbConnect
@@ -27,7 +27,6 @@ const dbConnect = async () => {
         console.log(`Connected to mongoDb successfully at : ${config.get('mongoUrl')}`);
         let port = process.env.PORT || config.get('port');
         app.listen(port, () => console.log(`Listening on port ${port}!`));
-
     }
     catch (err) { console.log(err) }
 }

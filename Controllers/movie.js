@@ -3,6 +3,7 @@ const model = require('../Core/movie');
 const userModel = require('../Core/user');
 module.exports = (express) => {
     let router = express.Router();
+    //Middleware For authentication && authorization
     router.use(async (req, res, next) => {
         if (req.method == `GET`)
             next();
@@ -15,14 +16,17 @@ module.exports = (express) => {
                 if (!result) {
                     res.statusCode = 403;
                     return res.send();
-                } else
-                    next();
-            } catch (error) {
+                }
+                else next();
+            }
+            catch (error) {
                 res.statusCode = 403;
                 return res.send(error);
             }
         }
     });
+    
+    //CRUD Endpoints
     router.post('/', async (req, res) => {
         try {
             let newObj = new model(req.body);

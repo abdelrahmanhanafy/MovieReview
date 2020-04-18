@@ -5,6 +5,7 @@ const model = require('../Core/user');
 const Joi = require('joi');
 module.exports = (express) => {
     let router = express.Router();
+    //User Endpoints
     router.post('/signup', async (req, res) => {
         try {
             let hash = bcrypt.hashSync(req.body.password, 10);
@@ -16,10 +17,12 @@ module.exports = (express) => {
         }
         catch (error) { res.status(400).send(`Something went wrong`) }
     });
-
     router.post('/login', async (req, res) => {
         let email = req.body.email, password = req.body.password;
-        const schema = { email: Joi.string().email().required(), password: Joi.string().required() };
+        const schema = {
+            email: Joi.string().email().required(),
+            password: Joi.string().required()
+        };
         const { error } = Joi.validate(req.body, schema);
         if (error)
             return res.status(400).send(error.details[0].message);
