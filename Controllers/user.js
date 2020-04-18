@@ -1,14 +1,18 @@
 const config = require('config');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const model = require('../Core/user');
 const Joi = require('joi');
 module.exports = (express) => {
     let router = express.Router();
     router.post('/signup', async (req, res) => {
         try {
+            let hash = bcrypt.hashSync(req.body.password, 10);
+            req.body.password = hash;
             let newObj = new model(req.body);
             let user = await newObj.save();
             res.send(user);
+
         }
         catch (error) { res.status(400).send(`Something went wrong`) }
     });
@@ -21,7 +25,7 @@ module.exports = (express) => {
             return res.status(400).send(error.details[0].message);
         try {
             let _res = await model.findOne({ email: email })
-            if (_res && _res.password == password) {
+            if (_res && bcrypt.compareSync(password, _res.password) == true) {
                 let token = jwt.sign({ id: _res._id, email: _res.email }, config.get('Privatekey'));
                 res.send(token);
             }
