@@ -1,0 +1,5 @@
+{
+    "Privatekey": "jwtPrivatekey",
+    "port": 8400,
+    "mongoUrl": "mongodb+srv://dbUser:db123456@cluster0-azpdo.mongodb.net/test?retryWrites=true&w=majority"
+}
