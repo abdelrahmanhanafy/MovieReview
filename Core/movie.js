@@ -12,13 +12,13 @@ let movie = new mongoose.Schema({
         type: String,
         required: true
     },
-    actors: [{
-        type: String
-    }],
+    actors: [
+        {
+            type: String
+        }],
     reviews: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Reviews',
+            type: String,
         }
 
     ]

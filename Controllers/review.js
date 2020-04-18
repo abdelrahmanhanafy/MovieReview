@@ -28,9 +28,6 @@ module.exports = (express) => {
         try {
             let newObj = new model(req.body);
             let review = await newObj.save();
-            let movie = await movieModel.findOne({ _id: review.movieId })
-            movie.reviews.push(review)
-            let Updatemovie = await movieModel.findOneAndUpdate({ _id: movie._id }, movie);
             res.send(review);
         }
         catch (error) { res.status(400).send(`Something went wrong`) }

@@ -1,12 +1,15 @@
-//process.env.NODE_ENV = "test";
+//Node Modules
 const config = require('config');
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+
+//Set Up A New App
 const app = new express();
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.json({ limit: "10mb" }));
 
+//Import Routes
 const userController = require('./Controllers/user')(express);
 const movieController = require('./Controllers/movie')(express);
 const reviewController = require('./Controllers/review')(express);
@@ -29,6 +32,7 @@ const dbConnect = async () => {
     catch (err) { console.log(err) }
 }
 dbConnect();
+
 module.exports = app;
 
 
