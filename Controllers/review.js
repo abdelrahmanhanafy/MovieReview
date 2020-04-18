@@ -34,14 +34,13 @@ module.exports = (express) => {
 
     router.get('/', async (req, res) => {
         try {
-            let reviews = await model.find();
+            let reviews = await model.find().populate('movieId', 'name')
             res.send(reviews);
         }
         catch (error) { res.status(400).send(`Something went wrong`) }
     });
 
     router.patch('/:id', async (req, res) => {
-        console.log(req.params.id)
         try {
             let r = await model.findOne({ _id: req.params.id })
             let review = await model.findOneAndUpdate({ _id: req.params.id }, req.body);

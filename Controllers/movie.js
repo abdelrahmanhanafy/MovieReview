@@ -31,15 +31,32 @@ module.exports = (express) => {
         }
         catch (error) { res.status(400).send(`Something went wrong`) }
     });
-
     router.get('/', async (req, res) => {
         try {
-            let movies = await model.find();
-            res.send(movies);
+            if (req.query.sortBy && req.query.filterBy) {
+                let sortitems = req.query.sortBy.split(',');
+                let filteritems = req.query.filterBy.split(',');
+                let sortedFilteredmovies = await model.find({ genre: filteritems[0], year: filteritems[1] }).sort({ name: sortitems[0], genre: sortitems[1] })
+                res.send(sortedFilteredmovies);
+            }
+            else if (req.query.sortBy) {
+                let sortitems = req.query.sortBy.split(',');
+                let sortedMovies = await model.find().sort({ name: sortitems[0], genre: sortitems[1] })
+                res.send(sortedMovies);
+            }
+            else if (req.query.filterBy) {
+                let filteritems = req.query.filterBy.split(',');
+                let filteredMovies = await model.find({ genre: filteritems[0], year: filteritems[1] })
+                res.send(filteredMovies);
+            }
+            else {
+                let movies = await model.find();
+                res.send(movies);
+            }
+
         }
         catch (error) { res.status(400).send(`Something went wrong`) }
     });
-
     router.patch('/:id', async (req, res) => {
         try {
             let movie = await model.findOneAndUpdate({ _id: req.params.id }, req.body);
@@ -55,16 +72,10 @@ module.exports = (express) => {
         }
         catch (error) { res.status(400).send(`Something went wrong`) }
     });
-    // router.get('/', async (req, res) => {
-    //     console.log(req.query.filterBy)
-    //     try {
-    //         let movies = await model.find({ genre: req.query.filterBy })
-    //         res.send(movies);
-    //     }
-    //     catch (error) { res.status(400).send(`Something went wrong`) }
-    // });
+
 
     return router;
 }
 
-//sortBy=action,2000&filterBy=action
+
+
