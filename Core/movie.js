@@ -15,9 +15,13 @@ let movie = new mongoose.Schema({
     actors: [{
         type: String
     }],
-    reviews: [{
-        type: String
-    }]
+    reviews: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Reviews',
+        }
+
+    ]
 });
 let model = mongoose.model('Movies', movie);
 module.exports = model;

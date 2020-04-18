@@ -1,5 +1,6 @@
 let jwtDecode = require('jwt-decode');
 const model = require('../Core/review');
+const movieModel = require('../Core/movie');
 const userModel = require('../Core/user');
 module.exports = (express) => {
     let router = express.Router();
@@ -27,6 +28,9 @@ module.exports = (express) => {
         try {
             let newObj = new model(req.body);
             let review = await newObj.save();
+            let movie = await movieModel.findOne({ _id: review.movieId })
+            movie.reviews.push(review)
+            let Updatemovie = await movieModel.findOneAndUpdate({ _id: movie._id }, movie);
             res.send(review);
         }
         catch (error) { res.status(400).send(`Something went wrong`) }
@@ -34,7 +38,7 @@ module.exports = (express) => {
 
     router.get('/', async (req, res) => {
         try {
-            let reviews = await model.find().populate('movieId', 'name')
+            let reviews = await model.find().populate('movieId', 'name  -_id')
             res.send(reviews);
         }
         catch (error) { res.status(400).send(`Something went wrong`) }
