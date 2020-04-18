@@ -21,7 +21,7 @@ app.use('/api/review', reviewController);
 const dbConnect = async () => {
     try {
         await mongoose.connect(config.get('mongoUrl'), { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
-        console.log(`Connected to mongoDb successfully at: ${config.get('mongoUrl')}`);
+        console.log(`Connected to mongoDb successfully at : ${config.get('mongoUrl')}`);
         let port = process.env.PORT || config.get('port');
         app.listen(port, () => console.log(`Listening on port ${port}!`));
 
