@@ -52,10 +52,16 @@ describe('Users Endpoints', () => {
         expect(res.statusCode).toEqual(400)
     })
     it('should login', async () => {
+        const result = await request(app)
+            .post('/api/user/signup')
+            .send({
+                email: makeEmail().re,
+                password: `123456`,
+            })
         const res = await request(app)
             .post('/api/user/login')
             .send({
-                email: `test@gmail.com`,
+                email:result.body.email,
                 password: `123456`,
             })
         expect(res.statusCode).toEqual(200)
@@ -186,6 +192,23 @@ describe('Movies PATCH Endpoint', () => {
         expect(res.statusCode).toEqual(403)
     })
 })
+describe('Movies Delete Endpoint', () => {
+    it('should create a movie, then delete it', async () => {
+        const res = await request(app)
+            .post('/api/movie/')
+            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ') // Works.
+            .send({
+                name: `Lion King`,
+                genre: `cartoon`,
+                year: `2000`
+            })
+        const result = await request(app)
+            .delete(`/api/movie/${res.body._id}`)
+            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ') // Works.
+            .send()
+        expect(result.statusCode).toEqual(200)
+    })
+})
 describe('Reviews GET Endpoint', () => {
     it('should get all reviews', async () => {
         const res = await request(app)
@@ -266,4 +289,28 @@ describe('Reviews PATCH Endpoint', () => {
         expect(res.statusCode).toEqual(403)
     })
 
+})
+describe('Reviews Delete Endpoint', () => {
+    it('should create a review, then delete it', async () => {
+        const _res = await request(app)
+            .post('/api/movie/')
+            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ') // Works.
+            .send({
+                name: `Lion King`,
+                genre: `cartoon`,
+                year: `2000`
+            })
+        const res = await request(app)
+            .post('/api/review/')
+            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ')
+            .send({
+                movieId: _res.body._id,
+                rate: `7`
+            })
+        const result = await request(app)
+            .delete(`/api/review/${res.body._id}`)
+            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOWE4NDllZTY2ZTZiNDViNDdlMWU4OCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE1ODcxODYzNTN9.mZyaWa0bE8bsVGfj37pqxWaGRP63EhqFMClcbsUoevQ') // Works.
+            .send()
+        expect(result.statusCode).toEqual(200)
+    })
 })
