@@ -36,21 +36,21 @@ module.exports = (express) => {
             if (req.query.sortBy && req.query.filterBy) {
                 let sortitems = req.query.sortBy.split(',');
                 let filteritems = req.query.filterBy.split(',');
-                let sortedFilteredmovies = await model.find({ genre: filteritems[0], year: filteritems[1] }).sort({ name: sortitems[0], genre: sortitems[1] })
+                let sortedFilteredmovies = await model.find({ genre: filteritems[0], year: filteritems[1] }).sort({ name: sortitems[0], genre: sortitems[1] }).populate('reviews', '-_id title rate')
                 res.send(sortedFilteredmovies);
             }
             else if (req.query.sortBy) {
                 let sortitems = req.query.sortBy.split(',');
-                let sortedMovies = await model.find().sort({ name: sortitems[0], genre: sortitems[1] })
+                let sortedMovies = await model.find().sort({ name: sortitems[0], genre: sortitems[1] }).populate('reviews', '-_id title rate')
                 res.send(sortedMovies);
             }
             else if (req.query.filterBy) {
                 let filteritems = req.query.filterBy.split(',');
-                let filteredMovies = await model.find({ genre: filteritems[0], year: filteritems[1] })
+                let filteredMovies = await model.find({ genre: filteritems[0], year: filteritems[1] }).populate('reviews', '-_id title rate')
                 res.send(filteredMovies);
             }
             else {
-                let movies = await model.find()
+                let movies = await model.find().populate('reviews', '-_id title rate')
                 res.send(movies);
             }
 
