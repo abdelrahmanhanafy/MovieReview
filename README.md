@@ -1,5 +1,6 @@
 # MovieReview
 An app to review movies
+
 Code Structure:
 Controllers:  contains the routes. 
 Core: contains the schemas and the models.
@@ -20,6 +21,7 @@ npm test: change the congfiguration file to test file, connect to the test datab
 Database Connections:
 Development DB Url: 
 mongodb+srv://dbUser:db123456@cluster0-azpdo.mongodb.net/development?retryWrites=true&w=majority
+
 Test DB Url:
 mongodb+srv://dbUser:db123456@cluster0-azpdo.mongodb.net/test?retryWrites=true&w=majority
 
